@@ -22,8 +22,14 @@
 			zIndex: 0,
 			reset: false,
 			direction: false,
+			breakpointDisabled: 768
 		}, options);
 
+		var removeFixed = function($element) {
+			console.log("remove fixit");
+			$element.css({top:'',zIndex:'',width:'',height:''});
+		}
+		
 		$(this).each(function (index, element) {
 			var $w = $(window);
 			var $el = $(element);
@@ -31,8 +37,18 @@
 			var previousScroll = 0;
 			var rightDirection = !settings.direction;
 
+			// remove fixed on mobile views
+			$w.resize(function(){
+				if (settings.breakpointDisabled > $(document).width()) removeFixed($el);
+			});
+			
 			$w.scroll(function () {
 
+				if (settings.breakpointDisabled > $(document).width()) {
+					removeFixed($el);
+					return false;
+				}
+				
 				if (settings.direction) {
 					var currentScroll = $(this).scrollTop();
 
